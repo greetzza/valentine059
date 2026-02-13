@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine - Surat Spesial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #380607;
+            color: #e8b4b8;
+            overflow: hidden;
+            height: 100vh;
+            transition: background-color 1.5s ease;
+        }
+
+        body.letter-open {
+            overflow-y: auto;
+            background-color: #2a0405;
+        }
+
+        /* Halaman Depan - Kartu Valentine */
+        .card-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+            background-image: url('bgv.jpeg');
+        }
+
+        .card-container.fade-out {
+            transform: translateY(-100%);
+        }
+
+        .valentine-card {
+            width: 90%;
+            max-width: 600px;
+            height: 420px;
+            background-image: url('bgv.jpeg');
+            border: 10px solid #e8b4b8;
+            border-radius: 6px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .valentine-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.8);
+        }
+
+        .valentine-title {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 4.2rem;
+            color: #e8b4b8;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            letter-spacing: 2px;
+            font-weight: 1;
+            line-height: 0.9;
+        }
+
+        .valentine-subtitle {
+            font-size: 1.7rem;
+            color: #f5e6c8;
+            margin-bottom: 35px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .recipient-name {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 2.6rem;
+            color: #e8b4b8;
+            padding: 18px 35px;
+            border-top: 2px solid #e8b4b8;
+            border-bottom: 2px solid #e8b4b8;
+            margin-top: 15px;
+            letter-spacing: 1.5px;
+            font-weight: 400;
+        }
+
+        .click-instruction {
+            position: absolute;
+            bottom: 25px;
+            color: #f5e6c8;
+            font-size: 1.1rem;
+            animation: fadeInOut 2.5s infinite;
+            letter-spacing: 0.8px;
+            font-weight: 300;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Halaman Surat */
+        .letter-container {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            padding: 50px 20px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+
+        .letter-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .letter-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('bgv.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 1;
+            z-index: -1;
+        }
+
+        .letter-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 248, 240, 0.96);
+            padding: 60px;
+            border-radius: 3px;
+            box-shadow: 0 15px 40px rgba(56, 6, 7, 0.25);
+            border: 1px solid #e8b4b8;
+            position: relative;
+            color: #380607;
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #e8b4b8;
+        }
+
+        .letter-title {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 3rem;
+            color: #380607;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+
+        .letter-date {
+            font-size: 1.25rem;
+            color: #5a0b0c;
+            font-style: italic;
+            letter-spacing: 0.8px;
+        }
+
+        .letter-body {
+            line-height: 1.9;
+            font-size: 1.22rem;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .letter-body p {
+            margin-bottom: 25px;
+            text-align: justify;
+            letter-spacing: 0.4px;
+        }
+
+        .letter-body p:first-child::first-letter {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 3.2rem;
+            color: #e8b4b8;
+            float: left;
+            line-height: 1;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+
+        .letter-closing {
+            text-align: right;
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 1px solid #e8b4b8;
+        }
+
+        .closing-text {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 2.4rem;
+            color: #380607;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .signature {
+            font-size: 1.35rem;
+            color: #5a0b0c;
+            font-style: italic;
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #380607;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e8b4b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+            transition: all 0.3s ease;
+            border: 2px solid #e8b4b8;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background-color: #4a0a0b;
+        }
+
+        .close-letter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background-color: #380607;
+            color: #e8b4b8;
+            border: 2px solid #e8b4b8;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+            transition: all 0.3s ease;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            letter-spacing: 0.8px;
+        }
+
+        .close-letter:hover {
+            background-color: #4a0a0b;
+            transform: translateY(-3px);
+        }
+
+        /* Responsif */
+        @media (max-width: 768px) {
+            .valentine-card {
+                height: 380px;
+                padding: 35px;
+            }
+            
+            .valentine-title {
+                font-size: 3.5rem;
+            }
+            
+            .valentine-subtitle {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+            
+            .recipient-name {
+                font-size: 2.2rem;
+                padding: 15px 30px;
+            }
+            
+            .letter-content {
+                padding: 40px 25px;
+            }
+            
+            .letter-title {
+                font-size: 2.6rem;
+            }
+            
+            .letter-body {
+                font-size: 1.18rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .valentine-card {
+                height: 350px;
+                padding: 30px;
+                border-width: 8px;
+            }
+            
+            .valentine-title {
+                font-size: 2.8rem;
+                margin-bottom: 5px;
+            }
+            
+            .valentine-subtitle {
+                font-size: 1.3rem;
+                margin-bottom: 25px;
+            }
+            
+            .recipient-name {
+                font-size: 2rem;
+                padding: 12px 25px;
+                margin-top: 10px;
+            }
+            
+            .click-instruction {
+                bottom: 20px;
+                font-size: 1rem;
+            }
+            
+            .letter-content {
+                padding: 30px 20px;
+            }
+            
+            .letter-title {
+                font-size: 2.2rem;
+            }
+            
+            .letter-body {
+                font-size: 1.15rem;
+                line-height: 1.8;
+            }
+            
+            .close-letter {
+                top: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            
+            .music-control {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Halaman Depan: Kartu Valentine -->
+    <div class="card-container" id="cardContainer">
+        <div class="valentine-card" id="valentineCard">
+            <h1 class="valentine-title">Happy Valentine</h1>
+            <p class="valentine-subtitle">A Special Message</p>
+            <div class="recipient-name">For Khendya Malvinas Firdaus</div>
+            <p class="click-instruction">Klik untuk membuka surat</p>
+        </div>
+    </div>
+
+    <!-- Halaman Surat -->
+    <div class="letter-container" id="letterContainer">
+        <div class="letter-background"></div>
+        
+        <button class="close-letter" id="closeLetter">
+            <i class="fas fa-times"></i> Tutup Surat
+        </button>
+        
+        <div class="letter-content">
+            <div class="letter-header">
+                <h2 class="letter-title">My Dearest, Khendya Malvinas Firdaus</h2>
+                <p class="letter-date">14 Februari 2026</p>
+            </div>
+
+            <div class="letter-body">
+              <p>Actually, I'm not good at putting words together, but today i want to write something for you sayang hihihi. I just want to say aku happy banget kenal kamu. Maybe i could say you are a very happy end of year plot twist hahaha.</p>
+              <p>Maaf yaa aku sempat berkali-kali ngeraguiin kamu diawal dan gak percaya kalo kamu memang mau serius sama aku hehe. Tapi pada akhirnya kamu nunjukin dan ngebuktiin kalo itu semua bukan omong kosong aja. So happy to see you sayang, happy nya tuh plus plus plus lah pokoknya and i micuuu so so so much juga sekarang huhu.</p>
+              <p>Maacih yaa udah sayang sama aku, udah ngertiin aku, udah sabar sama aku, maacih juga udah jadi pendengar sekaligus tempat bercerita yang baik buat segala jenis cerita dan juga keluh kesah aku, walaupun yang pasti gak pernah ketinggalan juga nyebelinnya hahaha.</p>
+              <p>Thank you for making me feel loved again sayang, dan aku harap kamu juga ngerasain hal yang sama. I hope today you can feel how sincerely i love you, of course with 100% love just for you hahaha.</p>
+              <p>Happy valentine's day, sayang akuuu🤍</p>
+            </div>
+            
+            <div class="letter-closing">
+                <p class="closing-text">With All My Love</p>
+                <p class="signature"> My Favo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kontrol Musik -->
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-music"></i>
+    </div>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Audio untuk Musik -->
+    <audio id="backgroundMusic" loop>
+        <source src="kitt.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Elemen DOM
+        const cardContainer = document.getElementById('cardContainer');
+        const valentineCard = document.getElementById('valentineCard');
+        const letterContainer = document.getElementById('letterContainer');
+        const closeLetterBtn = document.getElementById('closeLetter');
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const body = document.body;
+        
+        // Status musik
+        let isMusicPlaying = false;
+        
+        // Fungsi untuk membuka surat dengan animasi
+        function openLetter() {
+            // Animasi kartu fade out
+            cardContainer.classList.add('fade-out');
+            
+            // Tunggu animasi selesai, lalu tampilkan surat
+            setTimeout(() => {
+                cardContainer.style.display = 'none';
+                letterContainer.style.display = 'block';
+                
+                // Trigger animasi surat masuk
+                setTimeout(() => {
+                    letterContainer.classList.add('show');
+                    body.classList.add('letter-open');
+                }, 50);
+                
+                // Putar musik otomatis saat surat terbuka
+                playMusic();
+            }, 800);
+        }
+        
+        // Fungsi untuk menutup surat dengan animasi
+        function closeLetter() {
+            // Animasi surat fade out
+            letterContainer.classList.remove('show');
+            
+            // Tunggu animasi selesai, lalu tampilkan kartu
+            setTimeout(() => {
+                letterContainer.style.display = 'none';
+                cardContainer.style.display = 'flex';
+                body.classList.remove('letter-open');
+                
+                // Animasi kartu fade in
+                setTimeout(() => {
+                    cardContainer.classList.remove('fade-out');
+                }, 50);
+                
+                // Hentikan musik saat surat ditutup
+                pauseMusic();
+            }, 800);
+        }
+        
+        // Fungsi untuk memutar musik
+        function playMusic() {
+            // Coba memutar musik, tangani error jika terjadi
+            backgroundMusic.play().then(() => {
+                isMusicPlaying = true;
+                musicControl.innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch(error => {
+                console.log("Autoplay diblokir oleh browser. Klik tombol musik untuk memulai.");
+                musicControl.style.background = "#4a0a0b";
+            });
+        }
+        
+        // Fungsi untuk menghentikan musik
+        function pauseMusic() {
+            backgroundMusic.pause();
+            isMusicPlaying = false;
+            musicControl.innerHTML = '<i class="fas fa-music"></i>';
+            musicControl.style.background = "#380607";
+        }
+        
+        // Fungsi untuk toggle musik (play/pause)
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                pauseMusic();
+            } else {
+                playMusic();
+            }
+        }
+        
+        // Event Listeners
+        valentineCard.addEventListener('click', openLetter);
+        closeLetterBtn.addEventListener('click', closeLetter);
+        musicControl.addEventListener('click', toggleMusic);
+        
+        // Tambahkan event listener untuk menutup surat dengan tombol ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && body.classList.contains('letter-open')) {
+                closeLetter();
+            }
+        });
+        
+        // Fungsi untuk mengubah nama penerima
+        function setRecipientName(name) {
+            const recipientNameElement = document.querySelector('.recipient-name');
+            recipientNameElement.textContent = `For ${name}`;
+        }
+        
+        // Inisialisasi: pastikan musik dalam keadaan pause saat pertama kali load
+        backgroundMusic.volume = 0.6;
+        backgroundMusic.pause();
+        
+        // Contoh: untuk mengganti nama penerima, panggil fungsi ini
+        // setRecipientName("Nama Orang Tersayang");
+        
+        // Efek hover tambahan untuk kartu
+        valentineCard.addEventListener('mouseenter', function() {
+            if (!cardContainer.classList.contains('fade-out')) {
+                valentineCard.style.transform = 'translateY(-8px)';
+            }
+        });
+        
+        valentineCard.addEventListener('mouseleave', function() {
+            if (!cardContainer.classList.contains('fade-out')) {
+                valentineCard.style.transform = 'translateY(0)';
+            }
+        });
+    </script>
+</body>
+
+</html>
